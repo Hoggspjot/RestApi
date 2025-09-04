@@ -18,8 +18,8 @@ public class BookController {
 
     private final BookMapper bookMapper = new BookMapper();
 
-    private List<Book> books = new ArrayList<>();
-    private AtomicLong counter = new AtomicLong(1);
+    private final List<Book> books = new ArrayList<>();
+    private final AtomicLong counter = new AtomicLong(1);
 
     // GET /api/books - получить все книги
     @GetMapping
