@@ -6,19 +6,37 @@ import com.BookApi.dto.BookResponseDto;
 import com.BookApi.mapper.BookMapper;
 import com.BookApi.model.Book;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+
+/*@RestController — это специализированная аннотация в Spring,
+которая используется для обозначения класса как контроллера,
+возвращающего данные (обычно в формате JSON или XML),
+а не представления
+объединяет в себе две аннотации
+@Controller — указывает, что класс является Spring-бином, отвечающим за обработку HTTP-запросов.
+@ResponseBody — указывает, что возвращаемое значение методов должно быть сериализовано
+в тело HTTP-ответа (например, как JSON)*/
 @RestController
+
+/*@RequestMapping — это аннотация общего назначения, которая используется для
+сопоставления HTTP-запросов с методами контроллера.
+Она определяет, какие URL-адреса и HTTP-методы должны обрабатываться
+тем или иным методом (или всем классом)
+то есть ->> сопоставление запросов с обработчиками*/
 @RequestMapping("/api/books")
 public class BookController {
 
+    //Mapper для конвертации DTO <-> Entity
     private final BookMapper bookMapper = new BookMapper();
 
+    //Хранение списка книг - пока без БД не добавил
     private final List<Book> books = new ArrayList<>();
+
+    //счетчик для генерации ID
     private final AtomicLong counter = new AtomicLong(1);
 
     // GET /api/books - получить все книги

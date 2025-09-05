@@ -3,6 +3,11 @@ package com.BookApi.dto;
 
 import lombok.Data;
 
+/*
+ * @Data аннотация Lombok автоматически генерирующая - геттеры , сеттеры
+ * переопределяет  toString() hashCode и equals
+ * НЕ добавляет конструктор со всеми полями — для этого есть @AllArgsConstructor
+ * */
 @Data
 public class BookResponseDto {
     private Long id;
