@@ -45,15 +45,23 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public BookResponseDto addBook(BookRequestDto bookRequestDto) {
-        return null;
-    }
-
-    @Override
-    public BookResponseDto updateBook(Long id, BookRequestDto bookRequestDto) {
         Book book = bookMapper.toEntity(bookRequestDto);
         book.setId(counter.getAndIncrement());
         books.add(book);
         return bookMapper.toResponseDto(book);
+    }
+
+    @Override
+    public BookResponseDto updateBook(Long id, BookRequestDto bookRequestDto) {
+        for (Book book : books) {
+            if (book.getId().equals(id)) {
+                book.setTitle(bookRequestDto.getTitle());
+                book.setAuthor(bookRequestDto.getAuthor());
+                book.setYear(bookRequestDto.getYear());
+                return bookMapper.toResponseDto(book);
+            }
+        }
+        return null;
     }
 
     @Override
