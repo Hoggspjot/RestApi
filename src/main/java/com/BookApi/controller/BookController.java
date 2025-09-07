@@ -6,6 +6,8 @@ import com.BookApi.dto.BookResponseDto;
 import com.BookApi.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -51,7 +53,7 @@ public class BookController {
 
     //POST - /api/books - добавить новую книгу
     @PostMapping
-    public BookResponseDto addBook(@RequestBody BookRequestDto requestDto) {
+    public BookResponseDto addBook(@Valid @RequestBody BookRequestDto requestDto) {
         return bookService.addBook(requestDto);
     }
 
