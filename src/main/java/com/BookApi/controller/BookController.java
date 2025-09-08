@@ -27,7 +27,7 @@ import java.util.List;
 Она определяет, какие URL-адреса и HTTP-методы должны обрабатываться
 тем или иным методом (или всем классом)
 то есть ->> сопоставление запросов с обработчиками*/
-@RequestMapping("/api/books")
+@RequestMapping("/books")
 public class BookController {
 
     private final BookService bookService;

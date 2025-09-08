@@ -4,7 +4,9 @@ import com.BookApi.dto.BookRequestDto;
 import com.BookApi.dto.BookResponseDto;
 import com.BookApi.mapper.BookMapper;
 import com.BookApi.model.Book;
+import com.BookApi.repository.BookJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,8 +16,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService{
-    //Хранение списка книг - пока без БД не добавил
-    private final List<Book> books = new ArrayList<>();
+    //Хранение списка книг
+    @Autowired
+    private BookJpaRepository bookJpaRepository;
     //счетчик для генерации ID
     private final AtomicLong counter = new AtomicLong(1);
 
@@ -29,43 +32,40 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public List<BookResponseDto> getAllBooks() {
-        return books.stream()
+        return bookJpaRepository.findAll().stream()
                 .map(bookMapper::toResponseDto)
                 .collect(Collectors.toUnmodifiableList());
     }
 
     @Override
     public BookResponseDto getBookById(Long id) {
-        return books.stream()
-                .filter(book -> book.getId().equals(id))
-                .findFirst()
+        return bookJpaRepository.findById(id)
                 .map(bookMapper::toResponseDto)
-                .orElse(null);
+                        .orElse(null);
     }
 
     @Override
     public BookResponseDto addBook(BookRequestDto bookRequestDto) {
         Book book = bookMapper.toEntity(bookRequestDto);
-        book.setId(counter.getAndIncrement());
-        books.add(book);
-        return bookMapper.toResponseDto(book);
+        Book addedBook = bookJpaRepository.save(book);
+        return bookMapper.toResponseDto(addedBook);
     }
 
     @Override
     public BookResponseDto updateBook(Long id, BookRequestDto bookRequestDto) {
-        for (Book book : books) {
-            if (book.getId().equals(id)) {
-                book.setTitle(bookRequestDto.getTitle());
-                book.setAuthor(bookRequestDto.getAuthor());
-                book.setYear(bookRequestDto.getYear());
-                return bookMapper.toResponseDto(book);
-            }
-        }
-        return null;
+        return bookJpaRepository.findById(id)
+                .map(book -> {
+                    book.setTitle(bookRequestDto.getTitle());
+                    book.setAuthor(bookRequestDto.getAuthor());
+                    book.setYear(bookRequestDto.getYear());
+                    Book updateBook = bookJpaRepository.save(book);
+                    return bookMapper.toResponseDto(updateBook);
+                })
+                .orElse(null);
     }
 
     @Override
     public void deleteBook(Long id) {
-        books.removeIf(book -> book.getId().equals(id));
+       bookJpaRepository.deleteById(id);
     }
 }
