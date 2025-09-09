@@ -16,18 +16,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService{
-    //Хранение списка книг
-    @Autowired
-    private BookJpaRepository bookJpaRepository;
-    //счетчик для генерации ID
-    private final AtomicLong counter = new AtomicLong(1);
+
+    //репозиторий для выполнения операций с сущностями в БД
+    private final BookJpaRepository bookJpaRepository;
 
     //Mapper для конвертации DTO <-> Entity
     private BookMapper bookMapper;
 
     @Autowired
-    public BookServiceImpl(BookMapper bookMapper) {
+    public BookServiceImpl(BookMapper bookMapper, BookJpaRepository bookJpaRepository) {
         this.bookMapper = bookMapper;
+        this.bookJpaRepository = bookJpaRepository;
     }
 
     @Override

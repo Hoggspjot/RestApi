@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookJpaRepository extends JpaRepository<Book, Long> {
-    //Jpa repository  findAll(), findById(), save(), deleteById()
-    //Ничего писать не нужно Spring Data JPA автоматически реализует интерфейс
 
+    //Spring Data JPA автоматически генерирует методы базовых crud операций
+    //Jpa repository  findAll(), findById(), save(), deleteById()
+    //и еще кучу всего
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * @Data аннотация Lombok автоматически генерирующая - геттеры , сеттеры
  * переопределяет  toString() hashCode и equals
  * НЕ добавляет конструктор со всеми полями — для этого есть @AllArgsConstructor
- * @NoArgsConstructor - добавляем явно что нужен пустой конструктор
+ * @NoArgsConstructor - указал явно что нужен пустой конструктор
  * пустой конструктор нужен для фреймворка при десериализации JSON
  * подстраховка
  *
@@ -21,11 +21,16 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+
+//класс является сущностью
 @Entity
+//Имя таблицы в бд
 @Table(name = "books")
 public class Book {
 
+    //поле является primary key
     @Id
+    //является автогенерируемым
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -33,6 +38,8 @@ public class Book {
     private String title;
     @Column(nullable = false)
     private String author;
-    @Column(name = "yer_of_publication", nullable = false)
+    //в H2 имя year является зарезервированным, необходимо
+    // явно указать название колонки отличное от year
+    @Column(name = "year_of_publication", nullable = false)
     private Integer year;
 }

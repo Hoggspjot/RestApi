@@ -14,8 +14,7 @@ import java.util.List;
 
 /*@RestController — это специализированная аннотация в Spring,
 которая используется для обозначения класса как контроллера,
-возвращающего данные (обычно в формате JSON или XML),
-а не представления
+возвращающего данные (обычно в формате JSON или XML), а не представления
 объединяет в себе две аннотации
 @Controller — указывает, что класс является Spring-бином, отвечающим за обработку HTTP-запросов.
 @ResponseBody — указывает, что возвращаемое значение методов должно быть сериализовано
@@ -45,7 +44,7 @@ public class BookController {
     }
 
 
-    // GET /api/books/id
+    // GET /api/books/id - получить книгу по id
     @GetMapping("/{id}")
     public BookResponseDto getBookById(@PathVariable Long id) {
         return bookService.getBookById(id);
