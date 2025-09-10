@@ -2,6 +2,7 @@ package com.BookApi.service;
 
 import com.BookApi.dto.BookRequestDto;
 import com.BookApi.dto.BookResponseDto;
+import com.BookApi.exception.BookNotFoundException;
 import com.BookApi.mapper.BookMapper;
 import com.BookApi.model.Book;
 import com.BookApi.repository.BookJpaRepository;
@@ -40,7 +41,7 @@ public class BookServiceImpl implements BookService{
     public BookResponseDto getBookById(Long id) {
         return bookJpaRepository.findById(id)
                 .map(bookMapper::toResponseDto)
-                        .orElse(null);
+                        .orElseThrow(() -> new BookNotFoundException("Книга не найдена"));
     }
 
     @Override
@@ -60,11 +61,14 @@ public class BookServiceImpl implements BookService{
                     Book updateBook = bookJpaRepository.save(book);
                     return bookMapper.toResponseDto(updateBook);
                 })
-                .orElse(null);
+                .orElseThrow(() -> new BookNotFoundException("Книга не найдена"));
     }
 
     @Override
     public void deleteBook(Long id) {
+        if (!bookJpaRepository.existsById(id)) {
+            throw new BookNotFoundException("Книга не найдена");
+        }
        bookJpaRepository.deleteById(id);
     }
 }
