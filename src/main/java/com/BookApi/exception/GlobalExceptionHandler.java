@@ -7,6 +7,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -14,11 +15,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     //Обработка ошибки - книга не найдена
     @ExceptionHandler(BookNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(BookNotFoundException exception) {
+
+        log.warn("Book not found: {}", exception.getMessage());
+
         ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.NOT_FOUND.value(),
@@ -32,6 +37,9 @@ public class GlobalExceptionHandler {
     //обработка ошибки валидации @Valid
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException exception) {
+
+        log.warn("Validation failed: {}",exception.getMessage());
+
         Map<String, String> errors = new HashMap<>();
 
         exception.getBindingResult().getAllErrors().forEach(error -> {
@@ -41,7 +49,7 @@ public class GlobalExceptionHandler {
         });
 
         String errorMessage = errors.entrySet().stream()
-                .map(entry -> entry.getKey()+": "+ entry.getValue())
+                .map(entry -> entry.getKey() + ": " + entry.getValue())
                 .collect(Collectors.joining(" "));
 
         ErrorResponse error = new ErrorResponse(
@@ -57,6 +65,9 @@ public class GlobalExceptionHandler {
     //Другие возможные ошибки
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception exception) {
+
+        log.error("Unexpected error: {}", exception.getMessage());
+
         ErrorResponse error = new ErrorResponse(
                 LocalDateTime.now(),
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),

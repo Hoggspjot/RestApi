@@ -26,6 +26,8 @@ spring:
 
 logging:
   level:
+    com.BookApi.exception: WARN
+    org.springframework.web: DEBUG
     org:
       hibernate:
         sql: debug
